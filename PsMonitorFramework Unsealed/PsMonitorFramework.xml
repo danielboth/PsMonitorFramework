@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ManagementPack SchemaVersion="2.0" ContentReadable="true" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Manifest>
+    <Identity>
+      <ID>PsMonitorFramework</ID>
+      <Version>1.0.5.0</Version>
+    </Identity>
+    <Name>PsMonitorFramework</Name>
+    <References>
+      <Reference Alias="MSIL">
+        <ID>Microsoft.SystemCenter.InstanceGroup.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SC">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="MSNL">
+        <ID>Microsoft.SystemCenter.NTService.Library</ID>
+        <Version>7.0.8560.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="Ps.MonitorFramework.PowerShell" Base="Windows!Microsoft.Windows.ComputerRole" Accessibility="Public" Abstract="false" Hosted="true" Singleton="false">
+          <Property ID="Name" Key="true" Type="string" />
+          <Property ID="AlertOwner" Key="false" Type="string" />
+          <Property ID="IntervalSeconds" Key="false" Type="int" />
+        </ClassType>
+        <ClassType ID="Ps.MonitorFramework.Service" Base="MSNL!Microsoft.SystemCenter.OwnProcessNTService" Accessibility="Public" Abstract="false" Hosted="true" Singleton="false">
+          <Property ID="Name" Key="true" Type="string" />
+          <Property ID="AlertOwner" Key="false" Type="string" />
+          <Property ID="MaxCpu" Key="false" Type="int" />
+          <Property ID="numCpuSamples" Key="false" Type="int" />
+          <Property ID="MaxMemory" Key="false" Type="int" />
+          <Property ID="numMemorySamples" Key="false" Type="int" />
+        </ClassType>
+        <ClassType ID="Ps.MonitorFramework.ServiceCpuMonitorGroup" Accessibility="Public" Base="MSIL!Microsoft.SystemCenter.InstanceGroup" Abstract="false" Hosted="false" Singleton="true" />
+        <ClassType ID="Ps.MonitorFramework.ServiceMemoryMonitorGroup" Accessibility="Public" Base="MSIL!Microsoft.SystemCenter.InstanceGroup" Abstract="false" Hosted="false" Singleton="true" />
+      </ClassTypes>
+    </EntityTypes>
+    <ModuleTypes>
+      <DataSourceModuleType ID="Ps.MonitorFramework.PowerShellDS" Accessibility="Public" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="Name" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="FilePath" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="IntervalSeconds" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="FilePath" Selector="$Config/FilePath$" ParameterType="string" />
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.SimpleScheduler">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime />
+              </DataSource>
+              <ProbeAction ID="ProbeScript" TypeID="Ps.MonitorFramework.InvokeScript">
+                <Name>$Config/Name$</Name>
+                <FilePath>$Config/FilePath$</FilePath>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="ProbeScript">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType Accessibility="Public" ID="Ps.MonitorFramework.DSTimedPowerShell.DiscoveryProvider">
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="TimeoutSeconds" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="FilePath" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="FilePath" Selector="$Config/FilePath$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="TimedPowerShell" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime />
+                <ScriptName>Ps Monitor Framework Discovery with TimedPowerShell</ScriptName>
+                <ScriptBody><![CDATA[param (
+	[string]$FilePath
+)
+
+$ErrorActionPreference = 'Stop'
+$api = New-Object -ComObject MOM.ScriptAPI
+
+function Write-OPScomEvent {
+	param (
+		# Messsage that will be used in the event
+		[Parameter(Mandatory)]
+		[string]$Message,
+
+		# Int for level: 0 -> Information, 1 -> Error, 2 ->  Warning
+		[ValidateRange(0,2)]
+		[Int]$Severity = 0,
+
+		# Id of event in the event log
+		[Int]$EventId = 1001,
+
+		# Name of the script where event happened
+		[string]$ScriptName = 'DiscoverMonitorFramework.ps1'
+	)
+	# Information is written only if there is registry key for the current script...
+	if (
+		$Severity -ne 0 -or
+		(Test-Path -LiteralPath "HKLM:\SOFTWARE\Ps\MonitorFramework\$ScriptName") 
+	) {
+		$api.LogScriptEvent(
+			$ScriptName,
+			$EventId,
+			$Severity,
+			$Message
+		)
+	} 
+}
+
+$discoveryData = $api.CreateDiscoveryData(0, '$MPElement$', '$Target/Id$')
+If(Test-Path $FilePath){
+	Try {
+		$monitorData = Import-PowerShellDataFile -LiteralPath $Filepath
+	}
+	Catch {
+		Write-OPScomEvent -Message "Failed to monitor datafile from path $FilePath - $_" -Severity 1 -EventId 2002
+		throw $_
+	}
+}
+
+If($monitorData){
+	# Discover services
+	$monitorData.service.GetEnumerator().ForEach({
+		$instance = $discoveryData.CreateClassInstance('$MPElement[Name="Ps.MonitorFramework.Service"]$')
+
+		$instance.AddProperty(
+			'$MPElement[Name="MSNL!Microsoft.SystemCenter.NTService"]/ServiceName$',
+			$_.Name
+		)
+
+		$instance.AddProperty(
+			'$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$',
+			'$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$'
+		)
+
+		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.Service"]/Name$', 
+			$_.Name
+		)
+
+		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.Service"]/AlertOwner$', 
+			$_.Value['AlertOwner']
+		)
+
+		$maxCpuValue = If($_.Value['MaxCpu']){
+			$_.Value['MaxCpu']
+		}
+		else {
+			0
+		}
+
+		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.Service"]/MaxCpu$', 
+			$maxCpuValue
+		)
+
+		$numCpuSamplesValue = If($_.Value['numCpuSamples']){
+			$_.Value['numCpuSamples']
+		}
+		else {
+			0
+		}
+
+		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.Service"]/numCpuSamples$', 
+			$numCpuSamplesValue
+		)
+
+
+		$maxMemoryValue = If($_.Value['MaxMemory']){
+			$_.Value['MaxMemory']
+		}
+		else {
+			0
+		}
+
+		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.Service"]/MaxMemory$', 
+			$maxMemoryValue
+		)
+
+		$numMemorySamplesValue = If($_.Value['numMemorySamples']){
+			$_.Value['numMemorySamples']
+		}
+		else {
+			0
+		}
+
+		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.Service"]/numMemorySamples$', 
+			$numMemorySamplesValue
+		)
+    
+		$instance.AddProperty(
+			'$MPElement[Name="System!System.Entity"]/DisplayName$',
+			"$($_.Name) Service"
+		)
+
+		Write-OPScomEvent -Message "Adding discoveryData for $($_.Name)" -Severity 0 -EventId 1000
+		$discoveryData.AddInstance($instance)
+	})
+
+	# Discover PowerShell monitoring
+	$monitorData.powerShell.GetEnumerator().ForEach({
+		$instance = $discoveryData.CreateClassInstance('$MPElement[Name="Ps.MonitorFramework.PowerShell"]$')
+
+		$instance.AddProperty(
+			'$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$',
+			'$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$'
+		)
+
+		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.PowerShell"]/Name$', 
+			$_.Name
+		)
+
+		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.PowerShell"]/AlertOwner$', 
+			$_.Value['AlertOwner']
+		)
+
+		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$', 
+			$_.Value['IntervalSeconds']
+		)
+
+		$instance.AddProperty(
+			'$MPElement[Name="System!System.Entity"]/DisplayName$',
+			"$($_.Name)"
+		)
+
+		Write-OPScomEvent -Message "Adding discoveryData for $($_.Name)" -Severity 0 -EventId 1000
+		$discoveryData.AddInstance($instance)
+	})
+
+	$discoveryData
+}]]></ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>FilePath</Name>
+                    <Value>$Config/FilePath$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </DataSource>
+            </MemberModules>
+            <Composition>
+              <Node ID="TimedPowerShell"></Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.Discovery.Data</OutputType>
+      </DataSourceModuleType>
+      <ProbeActionModuleType ID="Ps.MonitorFramework.InvokeScript" Accessibility="Internal" Batching="false" PassThrough="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="Name" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="FilePath" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="TimeoutSeconds" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction ID="Script" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagProbe">
+                <ScriptName>MonitorPowerShell.ps1</ScriptName>
+                <ScriptBody><![CDATA[param (
+	[Parameter(Mandatory)]
+    [string]$Name,
+
+	[Parameter(Mandatory)]
+    [string]$FilePath
+)
+
+function Write-OPScomEvent {
+    param (
+        # Messsage that will be used in the event
+        [Parameter(Mandatory)]
+        [string]$Message,
+
+        # Int for level: 0 -> Information, 1 -> Error, 2 ->  Warning
+        [ValidateRange(0,2)]
+        [Int]$Severity = 0,
+
+        # Id of event in the event log
+        [Int]$EventId = 1001,
+
+        # Name of the script where event happened
+        [string]$ScriptName = 'MonitorPowerShell.ps1'
+    )
+    # Information is written only if there is registry key for the current script...
+    if (
+        $Severity -ne 0 -or
+        (Test-Path -LiteralPath "HKLM:\SOFTWARE\Ps\MonitorFramework\$ScriptName") 
+    ) {
+        $api.LogScriptEvent(
+            $ScriptName,
+            $EventId,
+            $Severity,
+            $Message
+        )
+    } 
+}
+
+$api = New-Object -ComObject MOM.ScriptAPI
+
+$ErrorActionPreference = 'Stop'
+# Get the PowerShell script code to run from the MonitorData file.
+$powerShellMonitor = (Import-PowerShellDataFile -LiteralPath $FilePath).powerShell[$Name]
+
+Try {
+	[string]$script = & $powerShellMonitor.script
+	$scriptOutput = & ([scriptblock]::Create($script))
+}
+Catch {
+	 Write-OPScomEvent -Message "Error executing MonitorFramework PowerShell check $Name. Error: $_. Please review the script." -Severity 1 -EventId 2005
+	 Throw "Error executing MonitorFramework PowerShell check $Name. Error: $_. Please review the script."
+}
+
+# Check the scriptOutput, if any items are not of type int, string or bool, cast them to string.
+$dataTypes = @(
+	'String',
+	'Int32',
+	'Boolean'
+)
+
+$AlertDescription = If($scriptOutput.alertDescription.GetType().Name -notin $dataTypes) {
+    [string]$scriptOutput.alertDescription
+} else {
+    $scriptOutput.alertDescription
+}
+
+$result = If($scriptOutput.Result.GetType().Name -notin $dataTypes) {
+    [string]$scriptOutput.Result
+} else {
+    $scriptOutput.Result
+}
+
+If($scriptOutput.alertLevel -notin 'Healthy','Warning','Critical') {
+    Write-OPScomEvent -Message "PowerShell check $Name did not output any of the expected health states (Healthy, Warning, Critical). Please review the script." -Severity 1 -EventId 2004
+    Throw "PowerShell check $Name did not output any of the expected health states (Healthy, Warning, Critical). Please review the script."
+}
+
+$bag = $api.CreatePropertyBag()
+$bag.AddValue('AlertDescription',$AlertDescription)
+$bag.AddValue('AlertLevel',$scriptOutput.alertLevel)
+$bag.AddValue('Result',$result)
+
+Write-Output $bag]]></ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>Name</Name>
+                    <Value>$Config/Name$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>FilePath</Name>
+                    <Value>$Config/FilePath$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Script" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </ProbeActionModuleType>
+    </ModuleTypes>
+    <MonitorTypes>
+      <UnitMonitorType ID="Ps.MonitorFramework.PowerShell.Monitor" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="Healthy" NoDetection="false" />
+          <MonitorTypeState ID="Warning" NoDetection="false" />
+          <MonitorTypeState ID="Critical" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" name="Name" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="FilePath" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="IntervalSeconds" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="Ps.MonitorFramework.PowerShellDS">
+              <Name>$Config/Name$</Name>
+              <FilePath>$Config/FilePath$</FilePath>
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </DataSource>
+            <!-- ProbeAction Probe is used in OnDemand Detection only -->
+            <ProbeAction ID="Probe" TypeID="Ps.MonitorFramework.InvokeScript">
+              <Name>$Config/Name$</Name>
+              <FilePath>$Config/FilePath$</FilePath>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </ProbeAction>
+            <ProbeAction ID="PassThrough" TypeID="System!System.PassThroughProbe" />
+            <ConditionDetection ID="FilterCritical" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='AlertLevel']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Critical</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="FilterWarning" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='AlertLevel']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Warning</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="FilterHealthy" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='AlertLevel']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Healthy</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="Critical">
+              <Node ID="FilterCritical">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Warning">
+              <Node ID="FilterWarning">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Healthy">
+              <Node ID="FilterHealthy">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+          <OnDemandDetections>
+            <OnDemandDetection MonitorTypeStateID="Critical">
+              <Node ID="FilterCritical">
+                <Node ID="Probe">
+                  <Node ID="PassThrough" />
+                </Node>
+              </Node>
+            </OnDemandDetection>
+            <OnDemandDetection MonitorTypeStateID="Warning">
+              <Node ID="FilterWarning">
+                <Node ID="Probe">
+                  <Node ID="PassThrough" />
+                </Node>
+              </Node>
+            </OnDemandDetection>
+            <OnDemandDetection MonitorTypeStateID="Healthy">
+              <Node ID="FilterHealthy">
+                <Node ID="Probe">
+                  <Node ID="PassThrough" />
+                </Node>
+              </Node>
+            </OnDemandDetection>
+          </OnDemandDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Discoveries>
+      <Discovery ID="Optiver.MonitorFramework.PowerShellDiscovery" Target="Windows!Microsoft.Windows.Computer" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Ps.MonitorFramework.PowerShell" />
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Ps.MonitorFramework.DSTimedPowerShell.DiscoveryProvider">
+          <IntervalSeconds>86400</IntervalSeconds>
+          <TimeoutSeconds>300</TimeoutSeconds>
+          <FilePath>C:\Program Files\Ps\Monitoring\scom-monitordata.psd1</FilePath>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="Optiver.MonitorFramework.ServiceDiscovery" Target="Windows!Microsoft.Windows.Computer" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Ps.MonitorFramework.Service" />
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Ps.MonitorFramework.DSTimedPowerShell.DiscoveryProvider">
+          <IntervalSeconds>86400</IntervalSeconds>
+          <TimeoutSeconds>300</TimeoutSeconds>
+          <FilePath>C:\Program Files\Ps\Monitoring\scom-monitordata.psd1</FilePath>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="Optiver.MonitorFramework.ServiceMemoryMonitorGroupDiscovery" Target="Ps.MonitorFramework.ServiceCpuMonitorGroup" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Ps.MonitorFramework.ServiceCpuMonitorGroup" />
+          <DiscoveryRelationship TypeID="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SC!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="Ps.MonitorFramework.ServiceMemoryMonitorGroup"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="Ps.MonitorFramework.Service"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <Property>$MPElement[Name="Ps.MonitorFramework.Service"]/MaxMemory$</Property>
+                  </ValueExpression>
+                  <Operator>GreaterEqual</Operator>
+                  <ValueExpression>
+                    <Value>1</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="Optiver.MonitorFramework.ServiceCpuMonitorGroupDiscovery" Target="Ps.MonitorFramework.ServiceCpuMonitorGroup" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Ps.MonitorFramework.ServiceCpuMonitorGroup" />
+          <DiscoveryRelationship TypeID="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SC!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="Ps.MonitorFramework.ServiceCpuMonitorGroup"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="Ps.MonitorFramework.Service"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <Property>$MPElement[Name="Ps.MonitorFramework.Service"]/MaxCpu$</Property>
+                  </ValueExpression>
+                  <Operator>GreaterEqual</Operator>
+                  <ValueExpression>
+                    <Value>1</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+    </Discoveries>
+    <Monitors>
+      <UnitMonitor ID="Optiver.MonitorFramework.PowerShellMonitor" Accessibility="Internal" Enabled="true" Target="Ps.MonitorFramework.PowerShell" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Ps.MonitorFramework.PowerShell.Monitor" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="Optiver.MonitorFramework.PowerShellMonitor.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Information</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$</AlertParameter1>
+            <AlertParameter2>$Data/Context/Property[@Name='AlertDescription']$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Healthy" HealthState="Success" />
+          <OperationalState ID="Warning" MonitorTypeStateID="Warning" HealthState="Warning" />
+          <OperationalState ID="Critical" MonitorTypeStateID="Critical" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <Name>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$</Name>
+          <FilePath>C:\Program Files\Ps\Monitoring\scom-monitordata.psd1</FilePath>
+          <IntervalSeconds>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$</IntervalSeconds>
+          <TimeoutSeconds>300</TimeoutSeconds>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="Optiver.MonitorFramework.ServiceMonitor" Accessibility="Internal" Enabled="true" Target="Ps.MonitorFramework.Service" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="Optiver.MonitorFramework.ServiceMonitor.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Information</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Running" MonitorTypeStateID="Running" HealthState="Success" />
+          <OperationalState ID="NotRunning" MonitorTypeStateID="NotRunning" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$</ServiceName>
+          <CheckStartupType>false</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="Optiver.MonitorFramework.ServiceMemoryMonitor" Accessibility="Internal" Enabled="false" Target="Ps.MonitorFramework.Service" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="MSNL!Microsoft.SystemCenter.NTService.ConsecutiveSamplesThreshold.ErrorOnTooHigh" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="Optiver.MonitorFramework.ServiceMemoryMonitor.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Information</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$</AlertParameter1>
+            <AlertParameter2>$Target/Property[Type="Ps.MonitorFramework.Service"]/MaxMemory$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="SampleCountTooHigh" MonitorTypeStateID="SampleCountTooHigh" HealthState="Warning" />
+          <OperationalState ID="SampleCountNormal" MonitorTypeStateID="SampleCountNormal" HealthState="Success" />
+        </OperationalStates>
+        <Configuration>
+          <ServiceName>$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$</ServiceName>
+          <ObjectName>Process</ObjectName>
+          <CounterName>Private Bytes</CounterName>
+          <InstanceProperty>Name</InstanceProperty>
+          <ValueProperty>PrivateBytes</ValueProperty>
+          <Frequency>300</Frequency>
+          <ScaleBy>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/LogicalProcessors$</ScaleBy>
+          <Threshold>$Target/Property[Type="Ps.MonitorFramework.Service"]/MaxMemory$</Threshold>
+          <NumSamples>$Target/Property[Type="Ps.MonitorFramework.Service"]/numMemorySamples$</NumSamples>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="Optiver.MonitorFramework.ServiceCpuMonitor" Accessibility="Internal" Enabled="false" Target="Ps.MonitorFramework.Service" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="MSNL!Microsoft.SystemCenter.NTService.ConsecutiveSamplesThreshold.ErrorOnTooHigh" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="Optiver.MonitorFramework.ServiceCpuMonitor.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Information</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$</AlertParameter1>
+            <AlertParameter2>$Target/Property[Type="Ps.MonitorFramework.Service"]/MaxCpu$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="SampleCountTooHigh" MonitorTypeStateID="SampleCountTooHigh" HealthState="Warning" />
+          <OperationalState ID="SampleCountNormal" MonitorTypeStateID="SampleCountNormal" HealthState="Success" />
+        </OperationalStates>
+        <Configuration>
+          <ServiceName>$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$</ServiceName>
+          <ObjectName>Process</ObjectName>
+          <CounterName>Percent Processor Time</CounterName>
+          <InstanceProperty>Name</InstanceProperty>
+          <ValueProperty>PercentProcessorTime</ValueProperty>
+          <Frequency>300</Frequency>
+          <ScaleBy>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/LogicalProcessors$</ScaleBy>
+          <Threshold>$Target/Property[Type="Ps.MonitorFramework.Service"]/MaxCpu$</Threshold>
+          <NumSamples>$Target/Property[Type="Ps.MonitorFramework.Service"]/numCpuSamples$</NumSamples>
+        </Configuration>
+      </UnitMonitor>
+    </Monitors>
+    <Overrides>
+      <MonitorPropertyOverride ID="Ps.MonitorFramework.EnableServiceCpuMonitorOverride" Context="Ps.MonitorFramework.ServiceCpuMonitorGroup" Enforced="false" Monitor="Ps.MonitorFramework.ServiceCpuMonitor" Property="Enabled">
+        <Value>true</Value>
+      </MonitorPropertyOverride>
+      <MonitorPropertyOverride ID="Ps.MonitorFramework.EnableServiceMemoryMonitorOverride" Context="Ps.MonitorFramework.ServiceMemoryMonitorGroup" Enforced="false" Monitor="Ps.MonitorFramework.ServiceMemoryMonitor" Property="Enabled">
+        <Value>true</Value>
+      </MonitorPropertyOverride>
+    </Overrides>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="Optiver.MonitorFramework.PowerShellMonitor.AlertMessage" />
+      <StringResource ID="Optiver.MonitorFramework.ServiceMonitor.AlertMessage" />
+      <StringResource ID="Optiver.MonitorFramework.ServiceMemoryMonitor.AlertMessage" />
+      <StringResource ID="Optiver.MonitorFramework.ServiceCpuMonitor.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShell">
+          <Name>Ps Monitor Framework PowerShell Scripts</Name>
+          <Description></Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShell" SubElementID="Name">
+          <Name>PowerShell Monitor Name</Name>
+          <Description>The name of the PowerShell Monitor</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShell" SubElementID="AlertOwner">
+          <Name>Monitor Owner</Name>
+          <Description>The team owning this PowerShell monitor</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShell" SubElementID="IntervalSeconds">
+          <Name>Interval Seconds</Name>
+          <Description>The interval in seconds defines how often this check must run</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.Service">
+          <Name>Ps Monitor Framework Service</Name>
+          <Description></Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.Service" SubElementID="Name">
+          <Name>Service Name</Name>
+          <Description>The name of the monitored service</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.Service" SubElementID="AlertOwner">
+          <Name>Service Owner</Name>
+          <Description>The team owning this service</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.Service" SubElementID="MaxCpu">
+          <Name>MaxCpu</Name>
+          <Description>The maximum number of CPU usage allowed for this service</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.Service" SubElementID="numCpuSamples">
+          <Name>NumCpu Samples</Name>
+          <Description>The number of samples taken before an alert is raised for the CPU Usage</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.Service" SubElementID="MaxMemory">
+          <Name>MaxMemory</Name>
+          <Description>The maximum number of memory usage for this service</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.Service" SubElementID="numMemorySamples">
+          <Name>NumMemorySamples</Name>
+          <Description>The number of memory samples taken before an alert is raised</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.PowerShellDiscovery">
+          <Name>PowerShell Discovery</Name>
+          <Description>Discover PowerShell script in the MonitorFramework</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceDiscovery">
+          <Name>Service Discovery</Name>
+          <Description>Discover Services to monitor in the MonitorFramework</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMemoryMonitorGroupDiscovery">
+          <Name>Service Memory Monitor Group Discovery</Name>
+          <Description>Discovers all service in the Monitor Framework with memory monitoring enabled</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceCpuMonitorGroupDiscovery">
+          <Name>Service CPU Monitor Group Discovery</Name>
+          <Description>Discovers all service in the Monitor Framework with CPU monitoring enabled</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.ServiceCpuMonitorGroup">
+          <Name>Ps MonitorFramework Service CPU Monitored Group</Name>
+          <Description>Services with CPU monitoring enabled</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.ServiceMemoryMonitorGroup">
+          <Name>Ps Monitor Framework Service Memory Monitored Group</Name>
+          <Description>Services with Memory monitoring enabled</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.PowerShellMonitor">
+          <Name>PowerShell Monitor</Name>
+          <Description>Executes PowerShell scripts in the MonitorFramework</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.PowerShellMonitor.AlertMessage">
+          <Name>{0}</Name>
+          <Description>PowerShell script Ps Monitoring Framework has reported an error.
+Name: &gt;{0}
+
+{1}</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.PowerShellMonitor" SubElementID="Healthy">
+          <Name>Healthy</Name>
+          <Description>Healthy</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.PowerShellMonitor" SubElementID="Warning">
+          <Name>Warning</Name>
+          <Description>Warning</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.PowerShellMonitor" SubElementID="Critical">
+          <Name>Critical</Name>
+          <Description>Critical</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMonitor">
+          <Name>Service Monitor</Name>
+          <Description>Monitors services in the MonitorFramework</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMonitor.AlertMessage">
+          <Name>Service stopped:  {0}</Name>
+          <Description>Service monitored by the Ps Monitoring Framework stopped running.
+Name: &gt;{0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMonitor" SubElementID="Running">
+          <Name>Running</Name>
+          <Description>Running</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMonitor" SubElementID="NotRunning">
+          <Name>NotRunning</Name>
+          <Description>NotRunning</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMemoryMonitor">
+          <Name>Service Memory Monitor</Name>
+          <Description>Monitors the memory usage  of the service</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMemoryMonitor.AlertMessage">
+          <Name>{0}: Memory Usage to high</Name>
+          <Description>The memory usage (MB) of service {0} is above the threshold of {1}</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMemoryMonitor" SubElementID="SampleCountTooHigh">
+          <Name>SampleCountTooHigh</Name>
+          <Description>SampleCountTooHigh</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMemoryMonitor" SubElementID="SampleCountNormal">
+          <Name>SampleCountNormal</Name>
+          <Description>SampleCountNormal</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceCpuMonitor">
+          <Name>Service CPU Monitor</Name>
+          <Description>Monitors the CPU usage of the service</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceCpuMonitor.AlertMessage">
+          <Name>{0}: CPU Usage to high</Name>
+          <Description>The CPU usage of service {0} is above the threshold of {1}</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceCpuMonitor" SubElementID="SampleCountTooHigh">
+          <Name>SampleCountTooHigh</Name>
+          <Description>SampleCountTooHigh</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceCpuMonitor" SubElementID="SampleCountNormal">
+          <Name>SampleCountNormal</Name>
+          <Description>SampleCountNormal</Description>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles></KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
