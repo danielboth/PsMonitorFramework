@@ -1,0 +1,106 @@
+﻿<TemplateGroup>
+  <Instances>
+    <Instance ID="Instance3d5876a2e98b4569931758d52012d10f" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.Discovery" Version="1.0.0.0">
+      <DiscoveryConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Id>PowerShellDiscovery</Id>
+        <DisplayName>PowerShell Discovery</DisplayName>
+        <Description>Discover PowerShell script in the MonitorFramework</Description>
+        <DataSourceId>DS</DataSourceId>
+        <DataSourceConfig>&lt;IntervalSeconds&gt;86400&lt;/IntervalSeconds&gt;&lt;TimeoutSeconds&gt;300&lt;/TimeoutSeconds&gt;&lt;FilePath&gt;C:\Program Files\Ps\Monitoring\scom-monitordata.psd1&lt;/FilePath&gt;</DataSourceConfig>
+        <DataSourceType>Ps.MonitorFramework.DSTimedPowerShell.DiscoveryProvider</DataSourceType>
+        <Target>Windows!Microsoft.Windows.Computer</Target>
+        <Enabled>true</Enabled>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <ConfirmDelivery>false</ConfirmDelivery>
+        <Category>Discovery</Category>
+        <DiscoveryClasses>
+          <DiscoveryClassItem>
+            <TypeId>Ps.MonitorFramework.PowerShell</TypeId>
+            <Properties />
+          </DiscoveryClassItem>
+        </DiscoveryClasses>
+        <DiscoveryRelationships />
+      </DiscoveryConfig>
+    </Instance>
+    <Instance ID="Instance4b48ba8fc3084421a8cc6c26c215a5a8" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.Discovery" Version="1.0.0.0">
+      <DiscoveryConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Id>ServiceDiscovery</Id>
+        <DisplayName>Service Discovery</DisplayName>
+        <Description>Discover Services to monitor in the MonitorFramework</Description>
+        <DataSourceId>DS</DataSourceId>
+        <DataSourceConfig>&lt;IntervalSeconds&gt;86400&lt;/IntervalSeconds&gt;&lt;TimeoutSeconds&gt;300&lt;/TimeoutSeconds&gt;&lt;FilePath&gt;C:\Program Files\Ps\Monitoring\scom-monitordata.psd1&lt;/FilePath&gt;</DataSourceConfig>
+        <DataSourceType>Ps.MonitorFramework.DSTimedPowerShell.DiscoveryProvider</DataSourceType>
+        <Target>Windows!Microsoft.Windows.Computer</Target>
+        <Enabled>true</Enabled>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <ConfirmDelivery>false</ConfirmDelivery>
+        <Category>Discovery</Category>
+        <DiscoveryClasses>
+          <DiscoveryClassItem>
+            <TypeId>Ps.MonitorFramework.Service</TypeId>
+            <Properties />
+          </DiscoveryClassItem>
+        </DiscoveryClasses>
+        <DiscoveryRelationships />
+      </DiscoveryConfig>
+    </Instance>
+    <Instance ID="Instance9a7aba7cf5d9411d91728b90fa5a15b7" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.Discovery" Version="1.0.0.0">
+      <DiscoveryConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Id>ServiceMemoryMonitorGroupDiscovery</Id>
+        <DisplayName>Service Memory Monitor Group Discovery</DisplayName>
+        <Description>Discovers all service in the Monitor Framework with memory monitoring enabled</Description>
+        <DataSourceId>GroupPopulationDataSource</DataSourceId>
+        <DataSourceConfig>&lt;RuleId&gt;$MPElement$&lt;/RuleId&gt;&lt;GroupInstanceId&gt;$MPElement[Name="Ps.MonitorFramework.ServiceMemoryMonitorGroup"]$&lt;/GroupInstanceId&gt;&lt;MembershipRules&gt;&lt;MembershipRule&gt;&lt;MonitoringClass&gt;$MPElement[Name="Ps.MonitorFramework.Service"]$&lt;/MonitoringClass&gt;&lt;RelationshipClass&gt;$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$&lt;/RelationshipClass&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;Property&gt;$MPElement[Name="Ps.MonitorFramework.Service"]/MaxMemory$&lt;/Property&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;GreaterEqual&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value&gt;1&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;/MembershipRule&gt;&lt;/MembershipRules&gt;</DataSourceConfig>
+        <DataSourceType>SC!Microsoft.SystemCenter.GroupPopulator</DataSourceType>
+        <Target>Ps.MonitorFramework.ServiceCpuMonitorGroup</Target>
+        <Enabled>true</Enabled>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <ConfirmDelivery>false</ConfirmDelivery>
+        <Category>Discovery</Category>
+        <DiscoveryClasses>
+          <DiscoveryClassItem>
+            <TypeId>Ps.MonitorFramework.ServiceCpuMonitorGroup</TypeId>
+            <Properties />
+          </DiscoveryClassItem>
+        </DiscoveryClasses>
+        <DiscoveryRelationships>
+          <DiscoveryRelationshipItem>
+            <TypeId>MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities</TypeId>
+            <Properties />
+          </DiscoveryRelationshipItem>
+        </DiscoveryRelationships>
+      </DiscoveryConfig>
+    </Instance>
+    <Instance ID="Instance65c4f2ec60b542e0b29ffd1742c550d5" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.Discovery" Version="1.0.0.0">
+      <DiscoveryConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Id>ServiceCpuMonitorGroupDiscovery</Id>
+        <DisplayName>Service CPU Monitor Group Discovery</DisplayName>
+        <Description>Discovers all service in the Monitor Framework with CPU monitoring enabled</Description>
+        <DataSourceId>GroupPopulationDataSource</DataSourceId>
+        <DataSourceConfig>&lt;RuleId&gt;$MPElement$&lt;/RuleId&gt;&lt;GroupInstanceId&gt;$MPElement[Name="Ps.MonitorFramework.ServiceCpuMonitorGroup"]$&lt;/GroupInstanceId&gt;&lt;MembershipRules&gt;&lt;MembershipRule&gt;&lt;MonitoringClass&gt;$MPElement[Name="Ps.MonitorFramework.Service"]$&lt;/MonitoringClass&gt;&lt;RelationshipClass&gt;$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$&lt;/RelationshipClass&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;Property&gt;$MPElement[Name="Ps.MonitorFramework.Service"]/MaxCpu$&lt;/Property&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;GreaterEqual&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value&gt;1&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;/MembershipRule&gt;&lt;/MembershipRules&gt;</DataSourceConfig>
+        <DataSourceType>SC!Microsoft.SystemCenter.GroupPopulator</DataSourceType>
+        <Target>Ps.MonitorFramework.ServiceCpuMonitorGroup</Target>
+        <Enabled>true</Enabled>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <ConfirmDelivery>false</ConfirmDelivery>
+        <Category>Discovery</Category>
+        <DiscoveryClasses>
+          <DiscoveryClassItem>
+            <TypeId>Ps.MonitorFramework.ServiceCpuMonitorGroup</TypeId>
+            <Properties />
+          </DiscoveryClassItem>
+        </DiscoveryClasses>
+        <DiscoveryRelationships>
+          <DiscoveryRelationshipItem>
+            <TypeId>MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities</TypeId>
+            <Properties />
+          </DiscoveryRelationshipItem>
+        </DiscoveryRelationships>
+      </DiscoveryConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>

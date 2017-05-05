@@ -1,0 +1,108 @@
+﻿<!-- This file has been automatically generated.
+     Any changes made to this file may be lost the next time it is regenerated. -->
+<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Monitoring>
+    <Discoveries>
+      <Discovery ID="Optiver.MonitorFramework.PowerShellDiscovery" Target="Windows!Microsoft.Windows.Computer" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Ps.MonitorFramework.PowerShell" />
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Ps.MonitorFramework.DSTimedPowerShell.DiscoveryProvider">
+          <IntervalSeconds>86400</IntervalSeconds>
+          <TimeoutSeconds>300</TimeoutSeconds>
+          <FilePath>C:\Program Files\Ps\Monitoring\scom-monitordata.psd1</FilePath>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="Optiver.MonitorFramework.ServiceDiscovery" Target="Windows!Microsoft.Windows.Computer" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Ps.MonitorFramework.Service" />
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Ps.MonitorFramework.DSTimedPowerShell.DiscoveryProvider">
+          <IntervalSeconds>86400</IntervalSeconds>
+          <TimeoutSeconds>300</TimeoutSeconds>
+          <FilePath>C:\Program Files\Ps\Monitoring\scom-monitordata.psd1</FilePath>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="Optiver.MonitorFramework.ServiceMemoryMonitorGroupDiscovery" Target="Ps.MonitorFramework.ServiceCpuMonitorGroup" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Ps.MonitorFramework.ServiceCpuMonitorGroup" />
+          <DiscoveryRelationship TypeID="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SC!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="Ps.MonitorFramework.ServiceMemoryMonitorGroup"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="Ps.MonitorFramework.Service"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <Property>$MPElement[Name="Ps.MonitorFramework.Service"]/MaxMemory$</Property>
+                  </ValueExpression>
+                  <Operator>GreaterEqual</Operator>
+                  <ValueExpression>
+                    <Value>1</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="Optiver.MonitorFramework.ServiceCpuMonitorGroupDiscovery" Target="Ps.MonitorFramework.ServiceCpuMonitorGroup" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Ps.MonitorFramework.ServiceCpuMonitorGroup" />
+          <DiscoveryRelationship TypeID="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SC!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="Ps.MonitorFramework.ServiceCpuMonitorGroup"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="Ps.MonitorFramework.Service"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <Property>$MPElement[Name="Ps.MonitorFramework.Service"]/MaxCpu$</Property>
+                  </ValueExpression>
+                  <Operator>GreaterEqual</Operator>
+                  <ValueExpression>
+                    <Value>1</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+    </Discoveries>
+  </Monitoring>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Optiver.MonitorFramework.PowerShellDiscovery">
+          <Name>PowerShell Discovery</Name>
+          <Description>Discover PowerShell script in the MonitorFramework</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceDiscovery">
+          <Name>Service Discovery</Name>
+          <Description>Discover Services to monitor in the MonitorFramework</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceMemoryMonitorGroupDiscovery">
+          <Name>Service Memory Monitor Group Discovery</Name>
+          <Description>Discovers all service in the Monitor Framework with memory monitoring enabled</Description>
+        </DisplayString>
+        <DisplayString ElementID="Optiver.MonitorFramework.ServiceCpuMonitorGroupDiscovery">
+          <Name>Service CPU Monitor Group Discovery</Name>
+          <Description>Discovers all service in the Monitor Framework with CPU monitoring enabled</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

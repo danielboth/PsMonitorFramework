@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{efdf4201-36eb-4552-9261-7ae3c17d9f49}</ProjectGuid>
+    <RootNamespace>Ps.MonitorFramework</RootNamespace>
+    <Name>PsMonitorFramework</Name>
+    <ManagementPackName>PsMonitorFramework</ManagementPackName>
+    <Version>1.0.6.6</Version>
+    <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
+    <MpFrameworkProfile>OM</MpFrameworkProfile>
+    <ProductVersion>1.1.0.0</ProductVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <GenerateSealed>False</GenerateSealed>
+    <Company>Optiver</Company>
+    <Copyright>Copyright (c) Optiver. All rights reserved.</Copyright>
+    <DelaySigning>False</DelaySigning>
+    <AssemblyOriginatorKeyFile>..\..\KeyFile\scom-keyfile.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <DelaySigning>false</DelaySigning>
+    <Company>MyCompany</Company>
+    <Copyright>Copyright (c) MyCompany. All rights reserved.</Copyright>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <ManagementPackReference Include="Microsoft.SystemCenter.DataWarehouse.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\Microsoft.SystemCenter.DataWarehouse.Library.mp</HintPath>
+      <Alias>MSDL</Alias>
+      <MinVersion>7.1.10226.0</MinVersion>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.SystemCenter.InstanceGroup.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\Microsoft.SystemCenter.InstanceGroup.Library.mp</HintPath>
+      <Alias>MSIL</Alias>
+      <MinVersion>7.5.8501.0</MinVersion>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.SystemCenter.Library">
+      <Alias>SC</Alias>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.SystemCenter.NTService.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012\Microsoft.SystemCenter.NTService.Library.mp</HintPath>
+      <Alias>MSNL</Alias>
+      <MinVersion>7.0.8560.0</MinVersion>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.Windows.Library">
+      <Alias>Windows</Alias>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="System.Health.Library">
+      <Alias>Health</Alias>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="System.Library">
+      <Alias>System</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.SystemCenter.Visualization.Library">
+      <Alias>Visualization</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="System.Performance.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\System.Performance.Library.mp</HintPath>
+      <Alias>Perf</Alias>
+      <MinVersion>7.0.8433.0</MinVersion>
+    </ManagementPackReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Discoveries" />
+    <Folder Include="Classes" />
+    <Folder Include="Monitors" />
+    <Folder Include="MonitorTypes" />
+    <Folder Include="MonitorDataFile" />
+    <Folder Include="Datasources" />
+    <Folder Include="Groups" />
+    <Folder Include="Presentation" />
+    <Folder Include="Rules" />
+    <Folder Include="Overrides" />
+    <Folder Include="Scripts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Discoveries\Discovery.mptg">
+      <SubType>Content</SubType>
+      <Generator>FragmentGenerator</Generator>
+    </Content>
+    <Content Include="Presentation\Views.mptg">
+      <SubType>Content</SubType>
+      <Generator>FragmentGenerator</Generator>
+    </Content>
+    <Content Include="Rules\PerformanceCollectionRules.mptg">
+      <SubType>Content</SubType>
+      <Generator>FragmentGenerator</Generator>
+    </Content>
+    <None Include="MonitorDataFile\scom-monitordata.psd1">
+      <SubType>Content</SubType>
+    </None>
+    <Content Include="Monitors\PowerShellMonitors.mptg">
+      <SubType>Content</SubType>
+      <Generator>FragmentGenerator</Generator>
+    </Content>
+    <Content Include="Monitors\ServiceMonitors.mptg">
+      <SubType>Content</SubType>
+      <Generator>FragmentGenerator</Generator>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\FrameworkPowerShell.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\FrameworkService.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Datasources\PowerShellDS.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Discoveries\Discovery.mptg.mpx">
+      <SubType>Code</SubType>
+      <DependentUpon>Discoveries\Discovery.mptg</DependentUpon>
+    </Compile>
+    <Compile Include="Discoveries\DiscoveryTypes.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Groups\ServiceCpuMonitorGroup.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Groups\ServiceMemoryMonitorGroup.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Monitors\PowerShellMonitors.mptg.mpx">
+      <SubType>Code</SubType>
+      <DependentUpon>Monitors\PowerShellMonitors.mptg</DependentUpon>
+    </Compile>
+    <Compile Include="Monitors\ServiceMonitors.mptg.mpx">
+      <SubType>Code</SubType>
+      <DependentUpon>Monitors\ServiceMonitors.mptg</DependentUpon>
+    </Compile>
+    <Compile Include="MonitorTypes\PowerShellMonitorTypes.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Overrides\EnableServiceCpuMonitorOverride.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Overrides\EnableServiceMemoryMonitorOverride.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Presentation\Folders.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Presentation\Views.mptg.mpx">
+      <SubType>Code</SubType>
+      <DependentUpon>Presentation\Views.mptg</DependentUpon>
+    </Compile>
+    <Compile Include="Rules\PerformanceCollectionRules.mptg.mpx">
+      <SubType>Code</SubType>
+      <DependentUpon>Rules\PerformanceCollectionRules.mptg</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\DiscoverMonitorFramework.ps1" />
+    <EmbeddedResource Include="Scripts\MonitorPowerShell.ps1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VSAC\Microsoft.SystemCenter.OperationsManager.targets" />
+</Project>

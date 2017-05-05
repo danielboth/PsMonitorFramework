@@ -1,0 +1,10 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Monitoring>
+    <Overrides>
+      <MonitorPropertyOverride ID="Ps.MonitorFramework.EnableServiceCpuMonitorOverride" Context="Ps.MonitorFramework.ServiceCpuMonitorGroup" Enforced="false" Monitor="Ps.MonitorFramework.ServiceCpuMonitor" Property="Enabled">
+        <Value>true</Value>
+      </MonitorPropertyOverride>
+    </Overrides>
+  </Monitoring>
+</ManagementPackFragment>
+

@@ -1,0 +1,32 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instance0a17624c6f914553b8943d9416ab7218" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomView" Version="1.0.0.0">
+      <CustomViewConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ViewFolder>Ps.MonitorFramework.PowerShell.Folder</ViewFolder>
+        <ViewType>SC!Microsoft.SystemCenter.PerformanceViewType</ViewType>
+        <ViewConfiguration>&lt;Criteria&gt;&lt;RuleList&gt;&lt;Rule&gt;$MPElement[Name="Ps.MonitorFramework.PowerShellResultCollectionRule"]$&lt;/Rule&gt;&lt;/RuleList&gt;&lt;/Criteria&gt;&lt;Presentation&gt;&lt;SortedColumnIndex&gt;2&lt;/SortedColumnIndex&gt;&lt;SortOrder&gt;0&lt;/SortOrder&gt;&lt;DynamicTimeTicks&gt;864000000000&lt;/DynamicTimeTicks&gt;&lt;Title&gt;PowerShell Monitor Result&lt;/Title&gt;&lt;TitleFont&gt;Consolas,14,Regular&lt;/TitleFont&gt;&lt;ChartType&gt;Spline&lt;/ChartType&gt;&lt;LabelFont&gt;Consolas,10,Regular&lt;/LabelFont&gt;&lt;XAxisFont&gt;Consolas,9,Regular&lt;/XAxisFont&gt;&lt;AutoAxis&gt;false&lt;/AutoAxis&gt;&lt;AxisMax&gt;110&lt;/AxisMax&gt;&lt;AxisMin&gt;0&lt;/AxisMin&gt;&lt;YAxisFont&gt;Consolas,9,Regular&lt;/YAxisFont&gt;&lt;/Presentation&gt;</ViewConfiguration>
+        <Visible>true</Visible>
+        <Accessibility>Internal</Accessibility>
+        <Id>View.Performance.PowerShellResult</Id>
+        <DisplayName>PowerShell Monitor Result</DisplayName>
+        <Description>The result data returned by the PowerShell Monitor</Description>
+        <Target>Ps.MonitorFramework.PowerShell</Target>
+        <Category>PerformanceCollection</Category>
+      </CustomViewConfig>
+    </Instance>
+    <Instance ID="Instance3b7c15b626034128a866aa61208ba67c" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomView" Version="1.0.0.0">
+      <CustomViewConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ViewFolder>Ps.MonitorFramework.PowerShell.Folder</ViewFolder>
+        <ViewType>SC!Microsoft.SystemCenter.StateViewType</ViewType>
+        <ViewConfiguration>&lt;Presentation&gt;&lt;ColumnInfo Index="1" SortIndex="-1" Width="100" Visible="true" Grouped="false" IsSortable="true" SortOrder="Descending" Sorted="false"&gt;&lt;Name&gt;State&lt;/Name&gt;&lt;Id&gt;Ps.MonitorFramework.PowerShell&lt;/Id&gt;&lt;/ColumnInfo&gt;&lt;ColumnInfo Index="2" SortIndex="-1" Width="150" Visible="true" Grouped="false" IsSortable="true" SortOrder="Descending" Sorted="true"&gt;&lt;Name&gt;Display Name&lt;/Name&gt;&lt;Id&gt;System.Entity/DisplayName&lt;/Id&gt;&lt;/ColumnInfo&gt;&lt;ColumnInfo Index="3" SortIndex="-1" Width="150" Visible="true" Grouped="false" IsSortable="true" SortOrder="Descending" Sorted="false"&gt;&lt;Name&gt;Name&lt;/Name&gt;&lt;Id&gt;Name&lt;/Id&gt;&lt;/ColumnInfo&gt;&lt;ColumnInfo Index="4" SortIndex="-1" Width="150" Visible="true" Grouped="false" IsSortable="true" SortOrder="Descending" Sorted="false"&gt;&lt;Name&gt;Monitor Owner&lt;/Name&gt;&lt;Id&gt;AlertOwner&lt;/Id&gt;&lt;/ColumnInfo&gt;&lt;ColumnInfo Index="4" SortIndex="-1" Width="150" Visible="true" Grouped="false" IsSortable="true" SortOrder="Descending" Sorted="false"&gt;&lt;Name&gt;Interval Seconds&lt;/Name&gt;&lt;Id&gt;IntervalSeconds&lt;/Id&gt;&lt;/ColumnInfo&gt;&lt;/Presentation&gt;</ViewConfiguration>
+        <Visible>true</Visible>
+        <Accessibility>Internal</Accessibility>
+        <Id>View.State.PowerShellMonitor</Id>
+        <DisplayName>PowerShell Monitor State</DisplayName>
+        <Description>This view displays all PowerShell Monitors discovered by the Ps Monitor Framework</Description>
+        <Target>Ps.MonitorFramework.PowerShell</Target>
+        <Category>StateCollection</Category>
+      </CustomViewConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>

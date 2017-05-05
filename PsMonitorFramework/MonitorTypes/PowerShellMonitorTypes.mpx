@@ -1,0 +1,125 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <MonitorTypes>
+      <UnitMonitorType ID="Ps.MonitorFramework.PowerShell.Monitor" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="Healthy" NoDetection="false" />
+          <MonitorTypeState ID="Warning" NoDetection="false" />
+          <MonitorTypeState ID="Critical" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" name="Name" type="xsd:string" />
+          <xsd:element minOccurs="1" name="FilePath" type="xsd:string" />
+          <xsd:element minOccurs="1" name="IntervalSeconds" type="xsd:int" />
+          <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:int" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="Ps.MonitorFramework.PowerShellDS">
+              <Name>$Config/Name$</Name>
+              <FilePath>$Config/FilePath$</FilePath>
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </DataSource>
+            
+            <!-- ProbeAction Probe is used in OnDemand Detection only -->
+            <ProbeAction ID="Probe" TypeID="Ps.MonitorFramework.InvokeScript">
+              <Name>$Config/Name$</Name>
+              <FilePath>$Config/FilePath$</FilePath>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </ProbeAction>
+            <ProbeAction ID="PassThrough" TypeID="System!System.PassThroughProbe" />
+
+            <ConditionDetection ID="FilterCritical" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='AlertLevel']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Critical</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          
+            <ConditionDetection ID="FilterWarning" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='AlertLevel']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Warning</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+
+            <ConditionDetection ID="FilterHealthy" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='AlertLevel']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Healthy</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="Critical">
+              <Node ID="FilterCritical">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Warning">
+              <Node ID="FilterWarning">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Healthy">
+              <Node ID="FilterHealthy">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+          <OnDemandDetections>
+            <OnDemandDetection MonitorTypeStateID="Critical">
+              <Node ID="FilterCritical">
+                <Node ID="Probe">
+                  <Node ID="PassThrough" />
+                </Node>
+              </Node>
+            </OnDemandDetection>
+            <OnDemandDetection MonitorTypeStateID="Warning">
+              <Node ID="FilterWarning">
+                <Node ID="Probe">
+                  <Node ID="PassThrough" />
+                </Node>
+              </Node>
+            </OnDemandDetection>
+            <OnDemandDetection MonitorTypeStateID="Healthy">
+              <Node ID="FilterHealthy">
+                <Node ID="Probe">
+                  <Node ID="PassThrough" />
+                </Node>
+              </Node>
+            </OnDemandDetection>
+          </OnDemandDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+</ManagementPackFragment>
+

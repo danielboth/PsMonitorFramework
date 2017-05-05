@@ -1,0 +1,9 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Monitoring>
+    <Overrides>
+      <MonitorPropertyOverride ID="Ps.MonitorFramework.EnableServiceMemoryMonitorOverride" Context="Ps.MonitorFramework.ServiceMemoryMonitorGroup" Enforced="false" Monitor="Ps.MonitorFramework.ServiceMemoryMonitor" Property="Enabled">
+        <Value>true</Value>
+      </MonitorPropertyOverride>
+    </Overrides>
+  </Monitoring>
+</ManagementPackFragment>

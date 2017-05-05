@@ -1,0 +1,22 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Presentation>
+    <Folders>
+      <Folder ID="Ps.MonitorFramework.RootFolder" Accessibility="Public" ParentFolder="SC!Microsoft.SystemCenter.Monitoring.ViewFolder.Root"/>
+      <Folder ID="Ps.MonitorFramework.PowerShell.Folder" Accessibility="Public" ParentFolder="Ps.MonitorFramework.RootFolder" />
+    </Folders>    
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Ps.MonitorFramework.RootFolder">
+          <Name>Ps Monitor Framework</Name>
+          <Description></Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShell.Folder">
+          <Name>PowerShell Monitors</Name>
+          <Description></Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

@@ -1,0 +1,66 @@
+﻿<!-- This file has been automatically generated.
+     Any changes made to this file may be lost the next time it is regenerated. -->
+<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Monitoring>
+    <Monitors>
+      <UnitMonitor ID="Ps.MonitorFramework.PowerShellMonitor" Accessibility="Internal" Enabled="true" Target="Ps.MonitorFramework.PowerShell" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Ps.MonitorFramework.PowerShell.Monitor" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="Ps.MonitorFramework.PowerShellMonitor.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$</AlertParameter1>
+            <AlertParameter2>$Data/Context/Property[@Name='AlertDescription']$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Healthy" HealthState="Success" />
+          <OperationalState ID="Warning" MonitorTypeStateID="Warning" HealthState="Warning" />
+          <OperationalState ID="Critical" MonitorTypeStateID="Critical" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <Name>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$</Name>
+          <FilePath>C:\Program Files\Ps\Monitoring\scom-monitordata.psd1</FilePath>
+          <IntervalSeconds>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$</IntervalSeconds>
+          <TimeoutSeconds>300</TimeoutSeconds>
+        </Configuration>
+      </UnitMonitor>
+    </Monitors>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="Ps.MonitorFramework.PowerShellMonitor.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShellMonitor">
+          <Name>PowerShell Monitor</Name>
+          <Description>Executes PowerShell scripts in the MonitorFramework</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShellMonitor.AlertMessage">
+          <Name>{0}</Name>
+          <Description>A PowerShell script excuted by the Ps Monitor Framework has reported an error.
+Script Name: {0}
+
+{1}</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShellMonitor" SubElementID="Healthy">
+          <Name>Healthy</Name>
+          <Description>Healthy</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShellMonitor" SubElementID="Warning">
+          <Name>Warning</Name>
+          <Description>Warning</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShellMonitor" SubElementID="Critical">
+          <Name>Critical</Name>
+          <Description>Critical</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

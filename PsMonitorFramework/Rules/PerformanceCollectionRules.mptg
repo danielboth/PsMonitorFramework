@@ -1,0 +1,26 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instancea945b287f72648f1868b6b2214c6cb66" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.PerformanceCollectionRule" Version="1.0.0.0">
+      <PerformanceCollectionRuleConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Id>PowerShellResultCollectionRule</Id>
+        <DisplayName>PowerShell Monitor Result Collection Rule</DisplayName>
+        <Description>Rule that collects information about percentage of allocated space on Storage Type Class</Description>
+        <Category>PerformanceCollection</Category>
+        <ConfirmDelivery>false</ConfirmDelivery>
+        <Target>Ps.MonitorFramework.PowerShell</Target>
+        <Enabled>true</Enabled>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <DiscardLevel>100</DiscardLevel>
+        <ConditionDetectionConfig>&lt;Threshold&gt;0&lt;/Threshold&gt;&lt;Operator&gt;Greater&lt;/Operator&gt;</ConditionDetectionConfig>
+        <ConditionDetectionId>CD</ConditionDetectionId>
+        <ConditionDetectionType />
+        <DataSourceId>DS</DataSourceId>
+        <DataSourceConfig>&lt;Name&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$&lt;/Name&gt;&lt;FilePath&gt;C:\Program Files\Ps\Monitoring\scom-monitordata.psd1&lt;/FilePath&gt;&lt;IntervalSeconds&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$&lt;/IntervalSeconds&gt;&lt;TimeoutSeconds&gt;300&lt;/TimeoutSeconds&gt;</DataSourceConfig>
+        <DataSourceType>Ps.MonitorFrameWork.PowerShell.Performance</DataSourceType>
+        <CollectToDB>true</CollectToDB>
+        <CollectToDW>true</CollectToDW>
+      </PerformanceCollectionRuleConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>

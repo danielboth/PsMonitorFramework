@@ -1,0 +1,116 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instance1cb8bbbf42bb4bd8ba0ce5a2d4aaa2da" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <MonitorType>Windows!Microsoft.Windows.CheckNTServiceStateMonitorType</MonitorType>
+        <MonitorConfig>&lt;ComputerName&gt;$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$&lt;/ComputerName&gt;&lt;ServiceName&gt;$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$&lt;/ServiceName&gt;&lt;CheckStartupType&gt;false&lt;/CheckStartupType&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>Running</OperationalStateId>
+            <OperationalStateDisplayName>Running</OperationalStateDisplayName>
+            <MonitorTypeStateId>Running</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>NotRunning</OperationalStateId>
+            <OperationalStateDisplayName>NotRunning</OperationalStateDisplayName>
+            <MonitorTypeStateId>NotRunning</MonitorTypeStateId>
+            <HealthState>Error</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.AvailabilityState</ParentMonitor>
+        <Accessibility>Internal</Accessibility>
+        <Id>ServiceMonitor</Id>
+        <DisplayName>Service Monitor</DisplayName>
+        <Description>Monitors services in the MonitorFramework</Description>
+        <Target>Ps.MonitorFramework.Service</Target>
+        <Enabled>true</Enabled>
+        <Category>AvailabilityHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>Error</AlertOnState>
+        <AlertPriority>Normal</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        <AlertName>Service stopped:  $Target/Property[Type="Ps.MonitorFramework.Service"]/Name$</AlertName>
+        <AlertDescription>Service monitored by the Ps Monitoring Framework stopped running.
+Name: $Target/Property[Type="Ps.MonitorFramework.Service"]/Name$</AlertDescription>
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+    <Instance ID="Instance94be84a6388a4b8bb539f6617b0fa8ae" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <MonitorType>MSNL!Microsoft.SystemCenter.NTService.ConsecutiveSamplesThreshold.ErrorOnTooHigh</MonitorType>
+        <MonitorConfig>&lt;ServiceName&gt;$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$&lt;/ServiceName&gt;&lt;ObjectName&gt;Process&lt;/ObjectName&gt;&lt;CounterName&gt;Private Bytes&lt;/CounterName&gt;&lt;InstanceProperty&gt;Name&lt;/InstanceProperty&gt;&lt;ValueProperty&gt;PrivateBytes&lt;/ValueProperty&gt;&lt;Frequency&gt;300&lt;/Frequency&gt;&lt;ScaleBy&gt;$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/LogicalProcessors$&lt;/ScaleBy&gt;&lt;Threshold&gt;$Target/Property[Type="Ps.MonitorFramework.Service"]/MaxMemory$&lt;/Threshold&gt;&lt;NumSamples&gt;$Target/Property[Type="Ps.MonitorFramework.Service"]/numMemorySamples$&lt;/NumSamples&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>SampleCountTooHigh</OperationalStateId>
+            <OperationalStateDisplayName>SampleCountTooHigh</OperationalStateDisplayName>
+            <MonitorTypeStateId>SampleCountTooHigh</MonitorTypeStateId>
+            <HealthState>Warning</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>SampleCountNormal</OperationalStateId>
+            <OperationalStateDisplayName>SampleCountNormal</OperationalStateDisplayName>
+            <MonitorTypeStateId>SampleCountNormal</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.PerformanceState</ParentMonitor>
+        <Accessibility>Internal</Accessibility>
+        <Id>ServiceMemoryMonitor</Id>
+        <DisplayName>Service Memory Monitor</DisplayName>
+        <Description>Monitors the memory usage  of the service</Description>
+        <Target>Ps.MonitorFramework.Service</Target>
+        <Enabled>false</Enabled>
+        <Category>AvailabilityHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>Warning</AlertOnState>
+        <AlertPriority>Normal</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        <AlertName>$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$: Memory Usage to high</AlertName>
+        <AlertDescription>The memory usage (MB) of service $Target/Property[Type="Ps.MonitorFramework.Service"]/Name$ is above the threshold of $Target/Property[Type="Ps.MonitorFramework.Service"]/MaxMemory$</AlertDescription>
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+    <Instance ID="Instance40c77fff0c65478bad7248320f258d1d" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <MonitorType>MSNL!Microsoft.SystemCenter.NTService.ConsecutiveSamplesThreshold.ErrorOnTooHigh</MonitorType>
+        <MonitorConfig>&lt;ServiceName&gt;$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$&lt;/ServiceName&gt;&lt;ObjectName&gt;Process&lt;/ObjectName&gt;&lt;CounterName&gt;Percent Processor Time&lt;/CounterName&gt;&lt;InstanceProperty&gt;Name&lt;/InstanceProperty&gt;&lt;ValueProperty&gt;PercentProcessorTime&lt;/ValueProperty&gt;&lt;Frequency&gt;300&lt;/Frequency&gt;&lt;ScaleBy&gt;$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/LogicalProcessors$&lt;/ScaleBy&gt;&lt;Threshold&gt;$Target/Property[Type="Ps.MonitorFramework.Service"]/MaxCpu$&lt;/Threshold&gt;&lt;NumSamples&gt;$Target/Property[Type="Ps.MonitorFramework.Service"]/numCpuSamples$&lt;/NumSamples&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>SampleCountTooHigh</OperationalStateId>
+            <OperationalStateDisplayName>SampleCountTooHigh</OperationalStateDisplayName>
+            <MonitorTypeStateId>SampleCountTooHigh</MonitorTypeStateId>
+            <HealthState>Warning</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>SampleCountNormal</OperationalStateId>
+            <OperationalStateDisplayName>SampleCountNormal</OperationalStateDisplayName>
+            <MonitorTypeStateId>SampleCountNormal</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.PerformanceState</ParentMonitor>
+        <Accessibility>Internal</Accessibility>
+        <Id>ServiceCpuMonitor</Id>
+        <DisplayName>Service CPU Monitor</DisplayName>
+        <Description>Monitors the CPU usage of the service</Description>
+        <Target>Ps.MonitorFramework.Service</Target>
+        <Enabled>false</Enabled>
+        <Category>AvailabilityHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>Warning</AlertOnState>
+        <AlertPriority>Normal</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        <AlertName>$Target/Property[Type="Ps.MonitorFramework.Service"]/Name$: CPU Usage to high</AlertName>
+        <AlertDescription>The CPU usage of service $Target/Property[Type="Ps.MonitorFramework.Service"]/Name$ is above the threshold of $Target/Property[Type="Ps.MonitorFramework.Service"]/MaxCpu$</AlertDescription>
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>

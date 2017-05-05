@@ -1,0 +1,50 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instance7959644f288741bfa301a5481eb761a7" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <MonitorType>Ps.MonitorFramework.PowerShell.Monitor</MonitorType>
+        <MonitorConfig>&lt;Name&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$&lt;/Name&gt;&lt;FilePath&gt;C:\Program Files\Ps\Monitoring\scom-monitordata.psd1&lt;/FilePath&gt;&lt;IntervalSeconds&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$&lt;/IntervalSeconds&gt;&lt;TimeoutSeconds&gt;300&lt;/TimeoutSeconds&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>Healthy</OperationalStateId>
+            <OperationalStateDisplayName>Healthy</OperationalStateDisplayName>
+            <MonitorTypeStateId>Healthy</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>Warning</OperationalStateId>
+            <OperationalStateDisplayName>Warning</OperationalStateDisplayName>
+            <MonitorTypeStateId>Warning</MonitorTypeStateId>
+            <HealthState>Warning</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>Critical</OperationalStateId>
+            <OperationalStateDisplayName>Critical</OperationalStateDisplayName>
+            <MonitorTypeStateId>Critical</MonitorTypeStateId>
+            <HealthState>Error</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.AvailabilityState</ParentMonitor>
+        <Accessibility>Internal</Accessibility>
+        <Id>PowerShellMonitor</Id>
+        <DisplayName>PowerShell Monitor</DisplayName>
+        <Description>Executes PowerShell scripts in the MonitorFramework</Description>
+        <Target>Ps.MonitorFramework.PowerShell</Target>
+        <Enabled>true</Enabled>
+        <Category>AvailabilityHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>Warning</AlertOnState>
+        <AlertPriority>Normal</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        <AlertName>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$</AlertName>
+        <AlertDescription>A PowerShell script excuted by the Ps Monitor Framework has reported an error.
+Script Name: $Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$
+
+$Data/Context/Property[@Name='AlertDescription']$</AlertDescription>
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>
