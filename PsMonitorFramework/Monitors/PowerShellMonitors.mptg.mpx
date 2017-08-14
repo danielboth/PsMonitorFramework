@@ -22,7 +22,7 @@
         </OperationalStates>
         <Configuration>
           <Name>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$</Name>
-          <FilePath>C:\Program Files\Ps\Monitoring\scom-monitordata.psd1</FilePath>
+          <FilePath>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/FilePath$</FilePath>
           <IntervalSeconds>$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$</IntervalSeconds>
           <TimeoutSeconds>300</TimeoutSeconds>
         </Configuration>

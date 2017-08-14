@@ -4,6 +4,7 @@
       <ClassTypes>
         <ClassType ID="Ps.MonitorFramework.PowerShell" Base="Windows!Microsoft.Windows.ComputerRole" Accessibility="Public" Abstract="false" Hosted="true" Singleton="false">
           <Property ID="Name" Key="true" Type="string" />
+          <Property ID ="FilePath" Key="false" Type="string" />
           <Property ID ="AlertOwner" Key="false" Type="string" />
           <Property ID ="IntervalSeconds" Key="false" Type="int"/>
         </ClassType>
@@ -20,6 +21,10 @@
         <DisplayString ElementID="Ps.MonitorFramework.PowerShell" SubElementID="Name">
           <Name>PowerShell Monitor Name</Name>
           <Description>The name of the PowerShell Monitor</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShell" SubElementID="FilePath">
+          <Name>PowerShell Monitor File Path</Name>
+          <Description>The SCOM Monitor Data file in which this monitor is stored</Description>
         </DisplayString>
         <DisplayString ElementID="Ps.MonitorFramework.PowerShell" SubElementID="AlertOwner">
           <Name>Monitor Owner</Name>

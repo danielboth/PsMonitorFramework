@@ -1,0 +1,35 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="Ps.MonitorFramework.PowerShellRule" Base="Windows!Microsoft.Windows.ComputerRole" Accessibility="Public" Abstract="false" Hosted="true" Singleton="false">
+          <Property ID="Name" Key="true" Type="string" />
+          <Property ID ="AlertOwner" Key="false" Type="string" />
+          <Property ID ="IntervalSeconds" Key="false" Type="int"/>
+        </ClassType>
+      </ClassTypes>
+    </EntityTypes>
+  </TypeDefinitions>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShellRule">
+          <Name>Ps Monitor Framework PowerShell Rule Script</Name>
+          <Description></Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShellRule" SubElementID="Name">
+          <Name>PowerShell Rule Name</Name>
+          <Description>The name of the PowerShell Monitor</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShellRule" SubElementID="AlertOwner">
+          <Name>Rule Owner</Name>
+          <Description>The team owning this PowerShell monitor</Description>
+        </DisplayString>
+        <DisplayString ElementID="Ps.MonitorFramework.PowerShellRule" SubElementID="IntervalSeconds">
+          <Name>Interval Seconds</Name>
+          <Description>The interval in seconds defines how often this check must run</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

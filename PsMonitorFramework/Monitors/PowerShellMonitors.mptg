@@ -3,7 +3,7 @@
     <Instance ID="Instance7959644f288741bfa301a5481eb761a7" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
       <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <MonitorType>Ps.MonitorFramework.PowerShell.Monitor</MonitorType>
-        <MonitorConfig>&lt;Name&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$&lt;/Name&gt;&lt;FilePath&gt;C:\Program Files\Ps\Monitoring\scom-monitordata.psd1&lt;/FilePath&gt;&lt;IntervalSeconds&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$&lt;/IntervalSeconds&gt;&lt;TimeoutSeconds&gt;300&lt;/TimeoutSeconds&gt;</MonitorConfig>
+        <MonitorConfig>&lt;Name&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$&lt;/Name&gt;&lt;FilePath&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/FilePath$&lt;/FilePath&gt;&lt;IntervalSeconds&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$&lt;/IntervalSeconds&gt;&lt;TimeoutSeconds&gt;300&lt;/TimeoutSeconds&gt;</MonitorConfig>
         <MonitorOperationalStates>
           <OperationalState>
             <OperationalStateId>Healthy</OperationalStateId>

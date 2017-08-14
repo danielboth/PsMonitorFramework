@@ -16,7 +16,7 @@
         <ConditionDetectionId>CD</ConditionDetectionId>
         <ConditionDetectionType />
         <DataSourceId>DS</DataSourceId>
-        <DataSourceConfig>&lt;Name&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$&lt;/Name&gt;&lt;FilePath&gt;C:\Program Files\Ps\Monitoring\scom-monitordata.psd1&lt;/FilePath&gt;&lt;IntervalSeconds&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$&lt;/IntervalSeconds&gt;&lt;TimeoutSeconds&gt;300&lt;/TimeoutSeconds&gt;</DataSourceConfig>
+        <DataSourceConfig>&lt;Name&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/Name$&lt;/Name&gt;&lt;FilePath&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/FilePath$&lt;/FilePath&gt;&lt;IntervalSeconds&gt;$Target/Property[Type="Ps.MonitorFramework.PowerShell"]/IntervalSeconds$&lt;/IntervalSeconds&gt;&lt;TimeoutSeconds&gt;300&lt;/TimeoutSeconds&gt;</DataSourceConfig>
         <DataSourceType>Ps.MonitorFrameWork.PowerShell.Performance</DataSourceType>
         <CollectToDB>true</CollectToDB>
         <CollectToDW>true</CollectToDW>

@@ -115,6 +115,9 @@
     <Compile Include="Classes\FrameworkPowerShell.mpx">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\FrameworkPowerShellRule.mpx">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Classes\FrameworkService.mpx">
       <SubType>Code</SubType>
     </Compile>

@@ -144,6 +144,11 @@ If($monitorData){
 		)
 
 		$instance.AddProperty(
+			'$MPElement[Name="Ps.MonitorFramework.PowerShell"]/FilePath$', 
+			$FilePath
+		)
+
+		$instance.AddProperty(
 			'$MPElement[Name="Ps.MonitorFramework.PowerShell"]/AlertOwner$', 
 			$_.Value['AlertOwner']
 		)
@@ -162,5 +167,39 @@ If($monitorData){
 		$discoveryData.AddInstance($instance)
 	})
 
+	If($monitorData.powerShellRule) {
+		$monitorData.powerShellRule.GetEnumerator().ForEach({
+			$instance = $discoveryData.CreateClassInstance('$MPElement[Name="Ps.MonitorFramework.PowerShellRule"]$')
+
+			$instance.AddProperty(
+				'$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$',
+				'$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$'
+			)
+
+			$instance.AddProperty(
+				'$MPElement[Name="Ps.MonitorFramework.PowerShellRule"]/Name$', 
+				$_.Name
+			)
+
+			$instance.AddProperty(
+				'$MPElement[Name="Ps.MonitorFramework.PowerShellRule"]/AlertOwner$', 
+				$_.Value['AlertOwner']
+			)
+
+			$instance.AddProperty(
+				'$MPElement[Name="Ps.MonitorFramework.PowerShellRule"]/IntervalSeconds$', 
+				$_.Value['IntervalSeconds']
+			)
+
+			$instance.AddProperty(
+				'$MPElement[Name="System!System.Entity"]/DisplayName$',
+				"$($_.Name)"
+			)
+
+			Write-OPScomEvent -Message "Adding discoveryData for $($_.Name)" -Severity 0 -EventId 1000
+			$discoveryData.AddInstance($instance)
+		})
+	}
+	
 	$discoveryData
 }
